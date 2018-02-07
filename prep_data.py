@@ -48,16 +48,17 @@ addresses = data[['Address1','City','State','Zip']].dropna()
 addresses['City'] = addresses['City'].apply(lambda x: x.lower())
 addresses['Lookup'] = addresses['Address1'] + addresses['Zip'] 
 
-addresses_01 = addresses[0:2400]
-addresses_02 = addresses[2400:4800]
-addresses_03 = addresses[4800:7200]
-addresses_04 = addresses[7200:9600]
-addresses_05 = addresses[9600:12000]
-addresses_06 = addresses[12000:]
+# only 2500 allowed per day
+num_members = len(addresses)
+folds = 6
+foldsize = 2400
 
-addresses_01.to_csv('addresses_01.csv')  
-addresses_02.to_csv('addresses_02.csv') 
-addresses_03.to_csv('addresses_03.csv')
-addresses_04.to_csv('addresses_04.csv')
-addresses_05.to_csv('addresses_05.csv')
-addresses_06.to_csv('addresses_06.csv')
+a = 0
+b = 1
+while a<=num_members:
+    if (a+foldsize) < num_members:
+        addresses[a:a+foldsize].to_csv('addresses_' + str(b) + '.csv')
+    else:
+        addresses[a:].to_csv('addresses_' + str(b) + '.csv')
+    a+=foldsize
+    b+=1
